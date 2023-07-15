@@ -1,8 +1,41 @@
-import { IBook } from "./book.interface";
+import { bookSearchableFields } from "./book.constant";
+import { IBook, IBookFilters } from "./book.interface";
 import { Book } from "./book.model";
 
 const createBook = async (payload: IBook): Promise<IBook | null> => {
   const result = await Book.create(payload);
+  return result;
+};
+
+const getBooks = async (filters: IBookFilters) => {
+  const { searchTerm, ...filtersData } = filters;
+
+  const andConditions = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      $or: bookSearchableFields.map((field) => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: "i",
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andConditions.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: { $regex: new RegExp(String(value), "i") },
+      })),
+    });
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {};
+
+  const result = await Book.find(whereConditions).sort({ createdAt: -1 });
+
   return result;
 };
 
@@ -16,8 +49,27 @@ const deleteBook = async (id: string): Promise<IBook | null> => {
   return result;
 };
 
+const updateBook = async (id: string, payload: Partial<IBook>) => {
+  const result = await Book.findByIdAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+  return result;
+};
+
+const createReview = async (id: string, payload) => {
+  const result = await Book.findByIdAndUpdate(
+    { _id: id },
+    { $push: { reviews: payload } }
+  );
+
+  return result;
+};
+
 export const BookService = {
   createBook,
+  getBooks,
   getSingleBook,
   deleteBook,
+  updateBook,
+  createReview,
 };

@@ -16,16 +16,23 @@ const BookSchema = new Schema<IBook, BookModel>(
       required: true,
     },
     publication: {
-      type: Date,
+      type: String,
       required: true,
     },
     image: {
       type: String,
-      default: ""
+      default: "",
     },
     creator: {
       type: String,
       required: true,
+    },
+    summary: {
+      type: String,
+    },
+    reviews: {
+      type: Array,
+      default: [],
     },
   },
   {
