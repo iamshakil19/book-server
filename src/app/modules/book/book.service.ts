@@ -50,6 +50,8 @@ const deleteBook = async (id: string): Promise<IBook | null> => {
 };
 
 const updateBook = async (id: string, payload: Partial<IBook>) => {
+  console.log(payload);
+
   const result = await Book.findByIdAndUpdate({ _id: id }, payload, {
     new: true,
   });
@@ -65,10 +67,10 @@ const createReview = async (id: string, payload) => {
   return result;
 };
 
-const getReviews = async(id: string) => {
-  const result = await Book.findById({ _id: id }).select("reviews")
+const getReviews = async (id: string) => {
+  const result = await Book.findById({ _id: id }).select("reviews");
   console.log(result);
-  
+
   return result;
 };
 

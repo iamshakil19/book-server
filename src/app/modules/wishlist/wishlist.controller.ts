@@ -10,8 +10,6 @@ const createWishlist = catchAsync(async (req: Request, res: Response) => {
 
   const result = await WishlistService.createWishlist(wishlistData);
 
-  console.log(result);
-
   sendResponse<IWishlist>(res, {
     statusCode: httpStatus.OK,
     success: true,
