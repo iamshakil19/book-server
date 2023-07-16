@@ -65,6 +65,13 @@ const createReview = async (id: string, payload) => {
   return result;
 };
 
+const getReviews = async(id: string) => {
+  const result = await Book.findById({ _id: id }).select("reviews")
+  console.log(result);
+  
+  return result;
+};
+
 export const BookService = {
   createBook,
   getBooks,
@@ -72,4 +79,5 @@ export const BookService = {
   deleteBook,
   updateBook,
   createReview,
+  getReviews,
 };

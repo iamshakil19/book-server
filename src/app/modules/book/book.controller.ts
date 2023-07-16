@@ -82,6 +82,17 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getReviews = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await BookService.getReviews(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Reviews retrieved successfully !",
+    data: result,
+  });
+});
+
 export const BookController = {
   createBook,
   getBooks,
@@ -89,4 +100,5 @@ export const BookController = {
   deleteBook,
   updateBook,
   createReview,
+  getReviews,
 };
